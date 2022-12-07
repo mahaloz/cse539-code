@@ -1,0 +1,30 @@
+latency of client js computation on my laptop, Intel(R) Core(TM) i5-2540M CPU @ 2.60GHz, 4GB RAM
+times are measured in milliseconds on Chromium version Chromium 77.0.3865.90 Arch Linux
+
+new client takes constant time
+50.3 50.6 47.3 52.0 54.2 44.5 53.5 53.2 46.2 59.6
+average: 51.14
+std deviation: 4.42
+
+
+our total script + html + libraries size: 72.5KB
+
+times are measured in milliseconds on Chromium version Chromium 72.0.3626.121 Arch Linux
+
+https://www.nytimes.com/
+69 requests
+4.9MB / 63 KB transferred
+DOMContentLoaded: 340ms
+load: 5.4 s
+
+https://www.washingtonpost.com
+102 requests
+9.1 MB / 2.87 MB transferred
+DOMContentLoaded: 274ms
+load: 3.36 s
+
+https://www.wsj.com/
+117 requests
+8.2 MB / 262 KB transferred
+DOMContentLoaded: 1.7 s
+load: 2.2 s

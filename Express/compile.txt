@@ -1,0 +1,1 @@
+gcc -fopenmp dpf.h dpf.c -lcrypto -lm
