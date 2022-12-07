@@ -26,6 +26,7 @@ this code with the original code.
 
 ## Results 
 Instructions for Client Writing:
-Riposte: 13252840326
-Sabre:   3589677627
-Express: 643565609
+
+- Riposte: 13252840326
+- Sabre:   3589677627
+- Express: 643565609
