@@ -1,0 +1,65 @@
+  node_t * blinds0 =  (node_t *) std::aligned_alloc(sizeof(__m256i),sizeof(node_t) * n_nodet ) ;
+  node_t * blinds1 =  (node_t *) std::aligned_alloc(sizeof(__m256i),sizeof(node_t) * n_nodet) ;
+  node_t * rand_ =  (node_t *) std::aligned_alloc(sizeof(__m256i),sizeof(node_t) * n_nodet) ;
+  // block_t * gamma0 =  (block_t *) malloc(sizeof(block_t) * n_nodet) ;
+  // block_t * gamma1 =  (block_t *) malloc(sizeof(block_t) * n_nodet) ;
+  
+  PRG(aeskey, seed0[0], (node_t *) blinds0, n_nodet);
+  PRG(aeskey, seed1[0], (node_t *) blinds1, n_nodet);
+  PRG(aeskey, seed2[0], (node_t *) rand_, n_nodet);
+  
+  block_t * gamma0 = (block_t *) std::aligned_alloc(sizeof(__m256i), sizeof(block_t) * n_nodet);
+  block_t * gamma1 = (block_t *) std::aligned_alloc(sizeof(__m256i), sizeof(block_t) * n_nodet);
+  block_t * blind0 = (block_t *) std::aligned_alloc(sizeof(__m256i), sizeof(block_t) * n_nodet);
+  block_t * rand   = (block_t *) std::aligned_alloc(sizeof(__m256i), sizeof(block_t) * n_nodet);
+  block_t * blind1 = (block_t *) std::aligned_alloc(sizeof(__m256i), sizeof(block_t) * n_nodet);
+
+  
+
+
+  for (unsigned r = 0; r < n_nodet; ++r)
+   {
+      blind0[r] = blinds0[r];
+      blind1[r] = blinds1[r];
+      rand[r]   = rand_[r];
+  
+      const block_t tmp1 = ((blind0[r] >> 1) & blind1[r]) ^ ((blind1[r] >> 1) & blind0[r]);
+      const block_t tmp2 = ((blind0[r] >> 2) & blind1[r]) ^ ((blind1[r] >> 2) & blind0[r]);
+  
+      const block_t bc = (tmp1 << 2) & maska;
+      const block_t ac = (tmp2 << 1) & maskb;
+      const block_t ab = (tmp1 >> 1) & maskc;
+  
+      gamma0[r] = ((bc | ac | ab) ^ rand[r]) ;
+      gamma1[r] = (rand[r] );
+   }
+
+ size_t n_blinds =  std::ceil(static_cast<double>(8 * sizeof(n_nodet))/ (3 * numofboxes));
+  for(size_t j = 0; j < n_nodet; ++j)
+  {
+    
+    size_t nboxbits = 3 * numofboxes;
+    for(size_t i = 0; i < n_blinds; ++ i)
+    {
+      block_t blind0_ = blind0[i];
+      block_t blind1_ = blind1[i];
+      block_t gamma0_ = gamma0[i];
+      block_t gamma1_ = gamma1[i];
+
+      blind0_ <<= (i * nboxbits);
+      blind0_ >>= (256 - (i + 1) * nboxbits);
+
+ 
+      blind1_ <<= (i * nboxbits);
+      blind1_ >>= (256 - (i + 1) * nboxbits);
+   
+      gamma0_ <<= (i * nboxbits);
+      gamma0_ >>= (256 - (i + 1) * nboxbits);
+
+      gamma1_ <<= (i * nboxbits);
+      gamma1_ >>= (256 - (i + 1) * nboxbits);
+
+    }
+  }
+
+  std::cout << (n_simulations * rounds) << " " << (n_nodet * n_blinds) << std::endl;
